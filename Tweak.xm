@@ -1,10 +1,15 @@
 BOOL global_enabled_round = true;
 BOOL global_enabled_inset = true;
-BOOL global_force_round = true;
+BOOL global_force_inset = false;
 
-CGFloat global_inset = 15.0;
+CGFloat global_inset = 25.0;
 CGFloat global_radius = 25.0;
 
+
+@interface PSTableCell : UITableViewCell
+	-(void)layoutSubviews;
+	-(int)sectionLocation;  // Location is an int in range [1, 4]: // 1 - is in the middle of 2 cells // 2 - is the top cell // 3 - is the bottom cell // 4 - is a isolated cell 
+@end
 
 void roundViewCorners(UIView *view, UIRectCorner corners) {
 	UIBezierPath *path = [UIBezierPath 
@@ -17,66 +22,70 @@ void roundViewCorners(UIView *view, UIRectCorner corners) {
 	view.layer.mask = layer;
 }
 
-void willDisplayCell(id instance, SEL selector, UITableView *table, UITableViewCell *cell, NSIndexPath* indexPath) {
-	BOOL isAtTop = indexPath.row == 0;
-	BOOL isAtBottom = indexPath.row == [table numberOfRowsInSection:indexPath.section] - 1;
-
-	if (isAtTop && isAtBottom) {
-		roundViewCorners(cell, UIRectCornerAllCorners);
-	} else if (isAtTop) {
-		roundViewCorners(cell, UIRectCornerTopLeft|UIRectCornerTopRight);
-	} else if (isAtBottom) {
-		roundViewCorners(cell, UIRectCornerBottomLeft|UIRectCornerBottomRight);
+void roundCell(PSTableCell *cell) {
+	roundViewCorners(cell, nil);  // Reset (in case of changes)
+	switch ([cell sectionLocation]) {
+		case 4:  // Isolated
+			roundViewCorners(cell, UIRectCornerAllCorners);
+			break;
+		case 3: // Bottom
+			roundViewCorners(cell, UIRectCornerBottomLeft|UIRectCornerBottomRight);
+			break;
+		case 2: // Top
+			roundViewCorners(cell, UIRectCornerTopLeft|UIRectCornerTopRight);
+			break;
+		default: // Middle (just to be explict)
+			break;
 	}
 }
 
-
-%group CIRCULAR_TABLE
-
-	%hook UITableView
-
-		-(UIEdgeInsets)_sectionContentInset {
-			UIEdgeInsets orig = %orig;
-			if (global_enabled_inset)
-				return UIEdgeInsetsMake(orig.top, global_inset, orig.bottom, global_inset);
-			return orig;
-		}
-
-		-(void)_setSectionContentInset:(UIEdgeInsets)insets {
-			if (global_enabled_inset)
-				return %orig(UIEdgeInsetsMake(insets.top, global_inset, insets.bottom, global_inset));
-			return %orig;
-		}
-
-		-(void)setDelegate:(id)arg1 {
-			class_addMethod([arg1 class], @selector(tableView:willDisplayCell:forRowAtIndexPath:), (IMP)willDisplayCell, "@@:@@");
+%group CELL
+	%hook PSTableCell
+		-(void)layoutSubviews {
 			%orig;
+			roundCell(self);
 		}
-		
 	%end
-
 %end
 
+%group TABLE
+	%hook UITableView
+		-(UIEdgeInsets)_sectionContentInset {
+			UIEdgeInsets orig = %orig;
+			return UIEdgeInsetsMake(orig.top, global_inset, orig.bottom, global_inset);
+		}
+		-(void)_setSectionContentInset:(UIEdgeInsets)insets {
+			return %orig(UIEdgeInsetsMake(insets.top, global_inset, insets.bottom, global_inset));
+		}
+	%end
+%end
 
 BOOL containsAny(NSString *string, NSArray *substrings) {
 	for (NSString *sub in substrings) {
-		if ([string rangeOfString:sub].location != NSNotFound) {
+		if ([string rangeOfString:sub].location != NSNotFound)
 			return true;
+	}
+	return false;
+}
+
+BOOL shouldLaunch() {
+	NSArray *args = [[NSClassFromString(@"NSProcessInfo") processInfo] arguments];
+	if (args.count > 0) {
+		NSString *exec = args[0];
+		if (exec) {
+			NSString *process = [exec lastPathComponent];
+			NSLog(@"LOGGING exec %@, process %@", exec, process);
+			return containsAny(process, [NSArray arrayWithObjects:@"SpringBoard", @"Preferences", nil]);
 		}
 	}
 	return false;
 }
 
-%ctor {
+%ctor { 
 
-	NSArray *args = [[NSClassFromString(@"NSProcessInfo") processInfo] arguments];
-	if (global_force_round || args.count > 0) {
-		NSString *exec = args[0];
-		if (global_force_round || exec) {
-			NSString *process = [exec lastPathComponent];
-			if (global_force_round || containsAny(process, [NSArray arrayWithObjects:@"SpringBoard", @"/Application", nil])) {
-				%init(CIRCULAR_TABLE);
-			}
-		}
+	if (global_enabled_inset && (global_force_inset || shouldLaunch())) {
+		%init(TABLE);
+		if (global_enabled_round)
+			%init(CELL);
 	}
 }

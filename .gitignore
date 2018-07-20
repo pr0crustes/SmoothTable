@@ -3,5 +3,6 @@
 theos
 obj
 smoothtables_pref/obj
+packages
 *.deb
 *.dylib
