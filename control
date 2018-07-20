@@ -1,5 +1,5 @@
-Package: me.pr0crustes.smoothtables
-Name: SmoothTables
+Package: me.pr0crustes.smoothtable
+Name: SmoothTable
 Depends: mobilesubstrate, preferenceloader
 Version: 0.0.1
 Architecture: iphoneos-arm

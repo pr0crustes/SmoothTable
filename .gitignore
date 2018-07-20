@@ -2,7 +2,7 @@
 .theos
 theos
 obj
-smoothtables_pref/obj
+smoothtable_pref/obj
 packages
 *.deb
 *.dylib
