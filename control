@@ -1,0 +1,9 @@
+Package: me.pr0crustes.smoothtables
+Name: SmoothTables
+Depends: mobilesubstrate, preferenceloader
+Version: 0.0.1
+Architecture: iphoneos-arm
+Description: Make TableViews great and smooth!
+Maintainer: pr0crustes
+Author: pr0crustes
+Section: Tweaks

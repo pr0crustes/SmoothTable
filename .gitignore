@@ -1,0 +1,7 @@
+.DS_Store
+.theos
+theos
+obj
+smoothtables_pref/obj
+*.deb
+*.dylib
