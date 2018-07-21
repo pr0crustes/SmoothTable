@@ -1,11 +1,21 @@
+#define _PLIST "/var/mobile/Library/Preferences/me.pr0crustes.smoothtable_prefs.plist"
+#define pref_getValue(key) [[NSDictionary dictionaryWithContentsOfFile:@(_PLIST)] valueForKey:key]
+#define pref_getBool(key) [pref_getValue(key) boolValue]
 
-
-BOOL global_enabled_round = true;
-BOOL global_enabled_inset = true;
+// Globals
+BOOL global_enabled_inset = false;
 BOOL global_force_inset = false;
-
+BOOL global_enabled_round = false;
 CGFloat global_inset = 25.0;
 CGFloat global_radius = 25.0;
+
+static void loadPrefs() {
+	global_enabled_inset = pref_getBool(@"pref_enable_inset");
+	global_force_inset = pref_getBool(@"pref_force_inset");
+	global_enabled_round = pref_getBool(@"pref_enable_rounding");
+	global_inset = [pref_getValue(@"pref_inset") floatValue];
+	global_radius = [pref_getValue(@"pref_radius") floatValue];
+}
 
 @interface PSTableCell : UITableViewCell
 	-(void)layoutSubviews;
@@ -84,6 +94,8 @@ BOOL shouldLaunch() {
 }
 
 %ctor { 
+
+	loadPrefs();
 
 	if (global_enabled_inset && (global_force_inset || shouldLaunch())) {
 		%init(TABLE);
