@@ -6,16 +6,21 @@
 	<dict>
 		<key>bundle</key>
 		<string>smoothtable_prefs</string>
+
 		<key>cell</key>
 		<string>PSLinkCell</string>
+
 		<key>detail</key>
 		<string>pr0crustes_smta_RootListController</string>
+
 		<key>icon</key>
 		<string>icon.png</string>
+
 		<key>isController</key>
 		<true/>
+		
 		<key>label</key>
-		<string>smoothtable_prefs</string>
+		<string>SmoothTable</string>
 	</dict>
 </dict>
 </plist>

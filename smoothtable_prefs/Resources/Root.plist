@@ -8,7 +8,7 @@
 			<key>cell</key>
 			<string>PSGroupCell</string>
 			<key>label</key>
-			<string>smoothtable_prefs First Page</string>
+			<string>Settings</string>
 		</dict>
 		<dict>
 			<key>cell</key>
@@ -24,6 +24,6 @@
 		</dict>
 	</array>
 	<key>title</key>
-	<string>smoothtable_prefs</string>
+	<string>SmoothTable</string>
 </dict>
 </plist>
