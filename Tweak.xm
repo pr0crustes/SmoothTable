@@ -15,6 +15,7 @@ static void loadPrefs() {
 	global_enabled_round = pref_getBool(@"pref_enable_rounding");
 	global_inset = [pref_getValue(@"pref_inset") floatValue];
 	global_radius = [pref_getValue(@"pref_radius") floatValue];
+	NSLog(@"[LOGGING] [! ! !] -> PREFS SETUP...");
 }
 
 @interface PSTableCell : UITableViewCell
@@ -94,12 +95,18 @@ BOOL shouldLaunch() {
 }
 
 %ctor { 
+	NSLog(@"[LOGGING] [! ! !] -> STARTING...");
 
 	loadPrefs();
 
+	NSLog(@"[LOGGING] [! ! !] -> LOADED...");
+
 	if (global_enabled_inset && (global_force_inset || shouldLaunch())) {
+		NSLog(@"[LOGGING] [! ! !] -> WILL INIT TABLE...");
 		%init(TABLE);
-		if (global_enabled_round)
+		if (global_enabled_round) {
+			NSLog(@"[LOGGING] [! ! !] -> WILL INIT CELL...");
 			%init(CELL);
+		}
 	}
 }
