@@ -9,7 +9,7 @@
 	}
 
 	-(void)onClickSourceCode:(id)arg1 {
-		NSURL *url = [NSURL URLWithString:@"https://github.com/pr0crustes"];
+		NSURL *url = [NSURL URLWithString:@"https://github.com/pr0crustes/SmoothTable"];
 		[[UIApplication sharedApplication] openURL:url options:@{} completionHandler:nil];
 	}
 
