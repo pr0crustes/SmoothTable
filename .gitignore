@@ -6,3 +6,4 @@ smoothtable_pref/obj
 packages
 *.deb
 *.dylib
+.sh
