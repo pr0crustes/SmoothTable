@@ -8,9 +8,7 @@ TARGET = iphone:11.2:10.0
 # ARCHS = x86_64
 # end simulator
 
-# SDKVERSION = 11.2
-# SYSROOT = /opt/Theos/sdks/iPhoneOS11.2.sdk
-
+# Needed to 'make package install'
 THEOS_DEVICE_IP = 192.168.1.7
 
 include $(THEOS)/makefiles/common.mk
@@ -20,11 +18,12 @@ SmoothTable_FILES = Tweak.xm
 
 include $(THEOS_MAKE_PATH)/tweak.mk
 
-# Subprojects
+# Subprojects (pref)
 SUBPROJECTS += smoothtable_prefs
 include $(THEOS_MAKE_PATH)/aggregate.mk
 # end subprojects
 
+# Just to quick run in simulator
 test::
 	@rm -f /opt/simject/$(TWEAK_NAME).dylib
 	@cp -v $(THEOS_OBJ_DIR)/$(TWEAK_NAME).dylib /opt/simject/$(TWEAK_NAME).dylib

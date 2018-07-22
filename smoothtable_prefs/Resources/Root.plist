@@ -41,7 +41,7 @@
 			<string>me.pr0crustes.smoothtable_prefs</string>
 
 			<key>label</key>
-			<string>Force TableView Inset</string>
+			<string>TableView Inset Everywhere</string>
 
 			<key>key</key>
 			<string>pref_force_inset</string>
@@ -80,6 +80,9 @@
 			<key>placeholder</key>
 			<string>25.0</string>
 
+			<key>default</key>
+			<string>25.0</string>
+
 			<key>key</key>
 			<string>pref_inset</string>
 		</dict>
@@ -100,8 +103,27 @@
 			<key>placeholder</key>
 			<string>25.0</string>
 
+			<key>default</key>
+			<string>25.0</string>
+
 			<key>key</key>
 			<string>pref_radius</string>
+		</dict>
+
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+		</dict>
+
+		<dict>
+			<key>cell</key>
+			<string>PSButtonCell</string>
+			<key>icon</key>
+			<string>GitHub-Mark-32px.png</string>
+			<key>label</key>
+			<string>Source Code</string>
+			<key>action</key>
+			<string>onClickSourceCode:</string>
 		</dict>
 
 	</array>
