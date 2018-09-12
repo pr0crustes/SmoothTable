@@ -1,7 +1,7 @@
 #!/bin/bash
 
 set -e
-make -C src clean
-make -C src
-make -C src test
+make clean
+make
+make test
 /opt/simject/simject/bin/respring_simulator

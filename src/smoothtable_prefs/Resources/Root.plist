@@ -41,10 +41,10 @@
 			<string>me.pr0crustes.smoothtable_prefs</string>
 
 			<key>label</key>
-			<string>TableView Inset Everywhere</string>
+			<string>Enable Corner Rounding</string>
 
 			<key>key</key>
-			<string>pref_force_inset</string>
+			<string>pref_enable_rounding</string>
 		</dict>
 
 		<dict>
@@ -58,10 +58,10 @@
 			<string>me.pr0crustes.smoothtable_prefs</string>
 
 			<key>label</key>
-			<string>Enable Corner Rounding</string>
+			<string>Enable Everywhere</string>
 
 			<key>key</key>
-			<string>pref_enable_rounding</string>
+			<string>pref_enable_everywhere</string>
 		</dict>
 
 		<dict>

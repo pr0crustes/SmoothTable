@@ -5,22 +5,22 @@
 
 // Globals vars
 BOOL global_enabled_inset = false;
-BOOL global_force_inset = false;
 BOOL global_enabled_round = false;
+BOOL global_enabled_everywhere = false;
 CGFloat global_inset = 25.0;
 CGFloat global_radius = 25.0;
 
 // Static function (pure C) that will be used to load the prefs (using macros)
 static void loadPrefs() {
 	global_enabled_inset = pref_getBool(@"pref_enable_inset");
-	global_force_inset = pref_getBool(@"pref_force_inset");
 	global_enabled_round = pref_getBool(@"pref_enable_rounding");
+	global_enabled_everywhere = pref_getBool(@"pref_enable_everywhere");
 	global_inset = [pref_getValue(@"pref_inset") floatValue] ?: global_inset;
 	global_radius = [pref_getValue(@"pref_radius") floatValue] ?: global_radius;
 }
 
 // Definition of PSTableCell, will be used later
-@interface PSTableCell : UITableViewCell
+@interface UITableViewCell (Pr0crustes)
 	-(void)layoutSubviews;
 	-(int)sectionLocation;  // Location is an int in range [1, 4]: 
 							// 1 - is in the middle of 2 cells 
@@ -34,7 +34,7 @@ static void loadPrefs() {
 
 %group CELL  // Creates a group called `CELL` that will hook everything related to the cell rounding
 
-	%hook PSTableCell  // Hooks the class PSTableCell
+	%hook UITableViewCell  // Hooks the class PSTableCell
 
 		// layoutSubviews is a method inherit from UIView
 		// called when sub or parent views changes
@@ -123,12 +123,17 @@ static BOOL shouldLaunch() {
 // Logos contructor (the code execution starts here)
 %ctor { 
 
+	NSLog(@"[SmoothTable] -> Enabling");
+
 	loadPrefs();  // Updates the global values
 
 	// Starts the tweak accordingly to the `shouldLaunch` and to the prefs
-	if (global_enabled_inset && (global_force_inset || shouldLaunch())) {
-		%init(TABLE);  // Inits the group `TABLE` (hooking the classes inside)
-		if (global_enabled_round)
-			%init(CELL);  // Inits the group `CELL` (hooking the classes inside)
+	if (global_enabled_everywhere || shouldLaunch()) {
+		if (global_enabled_inset) {
+			%init(TABLE);  // Inits the group `TABLE`
+		}
+		if (global_enabled_round) {
+			%init(CELL);  // Inits the group `CELL`
+		}
 	}
 }

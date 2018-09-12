@@ -9,7 +9,9 @@ TARGET = iphone:11.2:10.0
 # end simulator
 
 # Needed to 'make package install'
-THEOS_DEVICE_IP = 192.168.1.7
+THEOS_DEVICE_IP = 192.168.1.6
+FINAL_PACKAGE = 1
+DEBUG = 0
 
 include $(THEOS)/makefiles/common.mk
 
@@ -28,3 +30,9 @@ test::
 	@rm -f /opt/simject/$(TWEAK_NAME).dylib
 	@cp -v $(THEOS_OBJ_DIR)/$(TWEAK_NAME).dylib /opt/simject/$(TWEAK_NAME).dylib
 	@cp -v $(PWD)/$(TWEAK_NAME).plist /opt/simject
+
+# Just to quick delete files
+remove::
+	@rm -r .theos
+	@rm -r obj
+	@rm -r packages
