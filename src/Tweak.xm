@@ -6,7 +6,6 @@
 #define pref_getBool(key) [pref_getValue(key) boolValue]
 
 
-// Globals vars
 BOOL global_enabled_inset = false;
 BOOL global_enabled_round = false;
 BOOL global_enabled_everywhere = false;
