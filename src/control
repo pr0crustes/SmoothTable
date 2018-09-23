@@ -1,7 +1,7 @@
 Package: me.pr0crustes.smoothtable
 Name: SmoothTable
 Depends: mobilesubstrate (>= 0.9.5000), firmware (>= 3.0), com.rpetrich.rocketbootstrap (>= 1.0.3) | firmware (<< 7.0)
-Version: 1.0.0
+Version: 1.0.1
 Architecture: iphoneos-arm
 Description: Make TableViews great and smooth!
 Maintainer: pr0crustes
