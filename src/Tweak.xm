@@ -1,7 +1,10 @@
-// Macros that will be used for loading prefs
-#define _PLIST "/var/mobile/Library/Preferences/me.pr0crustes.smoothtable_prefs.plist"
-#define pref_getValue(key) [[NSDictionary dictionaryWithContentsOfFile:@(_PLIST)] valueForKey:key]
+#import "headers/UITableView-pr0crustes.h"
+
+
+#define _PLIST @"/var/mobile/Library/Preferences/me.pr0crustes.smoothtable_prefs.plist"
+#define pref_getValue(key) [[NSDictionary dictionaryWithContentsOfFile:_PLIST] valueForKey:key]
 #define pref_getBool(key) [pref_getValue(key) boolValue]
+
 
 // Globals vars
 BOOL global_enabled_inset = false;
@@ -10,41 +13,16 @@ BOOL global_enabled_everywhere = false;
 CGFloat global_inset = 25.0;
 CGFloat global_radius = 25.0;
 
-// Static function (pure C) that will be used to load the prefs (using macros)
-static void loadPrefs() {
-	global_enabled_inset = pref_getBool(@"pref_enable_inset");
-	global_enabled_round = pref_getBool(@"pref_enable_rounding");
-	global_enabled_everywhere = pref_getBool(@"pref_enable_everywhere");
-	global_inset = [pref_getValue(@"pref_inset") floatValue] ?: global_inset;
-	global_radius = [pref_getValue(@"pref_radius") floatValue] ?: global_radius;
-}
 
-// Definition of PSTableCell, will be used later
-@interface UITableViewCell (Pr0crustes)
-	-(void)layoutSubviews;
-	-(int)sectionLocation;  // Location is an int in range [1, 4]: 
-							// 1 - is in the middle of 2 cells 
-							// 2 - is the top cell 
-							// 3 - is the bottom cell 
-							// 4 - is a isolated cell 
-	// New methods
-	-(void)pr0crustes_roundCell;
-	-(void)pr0crustes_roundCorners:(UIRectCorner) corners;
-@end
+%group GROUP_CELL_ROUNDING
 
-%group CELL  // Creates a group called `CELL` that will hook everything related to the cell rounding
+	%hook UITableViewCell
 
-	%hook UITableViewCell  // Hooks the class PSTableCell
-
-		// layoutSubviews is a method inherit from UIView
-		// called when sub or parent views changes
 		-(void)layoutSubviews {
 			%orig;
 			[self pr0crustes_roundCell];
 		}
 
-		// Custom method that checks the cell sectionLocation
-		// and calls `pr0crustes_roundCorners` accordingly
 		%new
 		-(void)pr0crustes_roundCell {
 			[self pr0crustes_roundCorners:nil]; // Reset just to be sure
@@ -61,44 +39,48 @@ static void loadPrefs() {
 			}
 		}
 
-		// Custom method that rounds the cell (can be used to any UIView)
-		// accordingly to the UIRectCorner received
 		%new
 		-(void)pr0crustes_roundCorners:(UIRectCorner) corners {
-			UIBezierPath *path = [UIBezierPath 
-						bezierPathWithRoundedRect:self.bounds 
-						byRoundingCorners:corners 
-						cornerRadii:CGSizeMake(global_radius, global_radius)];
+			UIBezierPath *path = [UIBezierPath bezierPathWithRoundedRect:self.bounds byRoundingCorners:corners cornerRadii:CGSizeMake(global_radius, global_radius)];
 			CAShapeLayer *layer = [CAShapeLayer layer];
 			layer.frame = self.bounds;
 			layer.path = path.CGPath;
 			self.layer.mask = layer;
 		}
 
-	%end  // End of PSTableCell hook
+	%end
 
-%end  // End of `CELL` group
+%end
 
-%group TABLE  // Creates a group called `TABLE` that will hook everything related to table inset
 
-	%hook UITableView  // Hooks the class UITableView
 
-		// One of the methods used to add inset to the table
+%group GROUP_TABLE_INSET
+
+	%hook UITableView
+
 		-(UIEdgeInsets)_sectionContentInset {
 			UIEdgeInsets orig = %orig;
 			return UIEdgeInsetsMake(orig.top, global_inset, orig.bottom, global_inset);
 		}
 
-		// One of the methods used to add inset to the table
 		-(void)_setSectionContentInset:(UIEdgeInsets)insets {
 			return %orig(UIEdgeInsetsMake(insets.top, global_inset, insets.bottom, global_inset));
 		}
 
-	%end  // End of UITableView hook
+	%end
 
-%end  // End of `TABLE` group
+%end
 
-// Static function (pure C) that checks if any string in `substrings` is inside `mainstring`
+
+static void loadPrefs() {
+	global_enabled_inset = pref_getBool(@"pref_enable_inset");
+	global_enabled_round = pref_getBool(@"pref_enable_rounding");
+	global_enabled_everywhere = pref_getBool(@"pref_enable_everywhere");
+	global_inset = [pref_getValue(@"pref_inset") floatValue] ?: global_inset;
+	global_radius = [pref_getValue(@"pref_radius") floatValue] ?: global_radius;
+}
+
+
 static BOOL containsAny(NSString *mainstring, NSArray *substrings) {
 	for (NSString *sub in substrings) {
 		if ([mainstring rangeOfString:sub].location != NSNotFound)
@@ -107,7 +89,7 @@ static BOOL containsAny(NSString *mainstring, NSArray *substrings) {
 	return false;
 }
 
-// Static function (pure C) that checks if the tweak should or not launch
+
 static BOOL shouldLaunch() {
 	NSArray *args = [[NSClassFromString(@"NSProcessInfo") processInfo] arguments];
 	if (args.count > 0) {
@@ -120,20 +102,21 @@ static BOOL shouldLaunch() {
 	return false;
 }
 
-// Logos contructor (the code execution starts here)
-%ctor { 
 
-	NSLog(@"[SmoothTable] -> Enabling");
+%ctor {
 
-	loadPrefs();  // Updates the global values
+	loadPrefs();
 
-	// Starts the tweak accordingly to the `shouldLaunch` and to the prefs
 	if (global_enabled_everywhere || shouldLaunch()) {
+
+		NSLog(@"[SmoothTable] -> Enabling");
+
 		if (global_enabled_inset) {
-			%init(TABLE);  // Inits the group `TABLE`
+			%init(GROUP_TABLE_INSET);
 		}
 		if (global_enabled_round) {
-			%init(CELL);  // Inits the group `CELL`
+			%init(GROUP_CELL_ROUNDING);
 		}
 	}
+	
 }
