@@ -48,20 +48,35 @@
 		</dict>
 
 		<dict>
+			<key>bundle</key>
+			<string>AppList</string>
+
+			<key>ALNavigationTitle</key>
+			<string>Enabled Apps</string>
+
+			<key>enabled</key>
+			<true/>
+
 			<key>cell</key>
-			<string>PSSwitchCell</string>
+			<string>PSLinkCell</string>
 
-			<key>default</key>
-			<false/>
-
-			<key>defaults</key>
-			<string>me.pr0crustes.smoothtable_prefs</string>
+			<key>isController</key>
+			<true/>
 
 			<key>label</key>
-			<string>Enable Everywhere</string>
+			<string>Applications</string>
 
-			<key>key</key>
-			<string>pref_enable_everywhere</string>
+			<key>ALSettingsPath</key>
+			<string>/var/mobile/Library/Preferences/me.pr0crustes.smoothtable_prefs.plist</string>
+
+			<key>ALSingleEnabledMode</key>
+			<false/>
+
+			<key>ALSettingsKeyPrefix</key>
+			<string>EnabledApps-</string>
+
+			<key>ALAllowsSelection</key>
+			<false/>
 		</dict>
 
 		<dict>
@@ -113,6 +128,9 @@
 		<dict>
 			<key>cell</key>
 			<string>PSGroupCell</string>
+
+			<key>label</key>
+			<string>Other</string>
 		</dict>
 
 		<dict>

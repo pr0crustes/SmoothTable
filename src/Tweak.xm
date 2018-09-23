@@ -6,9 +6,6 @@
 #define pref_getBool(key) [pref_getValue(key) boolValue]
 
 
-BOOL global_enabled_inset = false;
-BOOL global_enabled_round = false;
-BOOL global_enabled_everywhere = false;
 CGFloat global_inset = 25.0;
 CGFloat global_radius = 25.0;
 
@@ -72,33 +69,8 @@ CGFloat global_radius = 25.0;
 
 
 static void loadPrefs() {
-	global_enabled_inset = pref_getBool(@"pref_enable_inset");
-	global_enabled_round = pref_getBool(@"pref_enable_rounding");
-	global_enabled_everywhere = pref_getBool(@"pref_enable_everywhere");
 	global_inset = [pref_getValue(@"pref_inset") floatValue] ?: global_inset;
 	global_radius = [pref_getValue(@"pref_radius") floatValue] ?: global_radius;
-}
-
-
-static BOOL containsAny(NSString *mainstring, NSArray *substrings) {
-	for (NSString *sub in substrings) {
-		if ([mainstring rangeOfString:sub].location != NSNotFound)
-			return true;
-	}
-	return false;
-}
-
-
-static BOOL shouldLaunch() {
-	NSArray *args = [[NSClassFromString(@"NSProcessInfo") processInfo] arguments];
-	if (args.count > 0) {
-		NSString *exec = args[0];
-		if (exec) {
-			NSString *process = [exec lastPathComponent];
-			return containsAny(process, [NSArray arrayWithObjects:@"SpringBoard", @"Preferences", nil]);
-		}
-	}
-	return false;
 }
 
 
@@ -106,14 +78,14 @@ static BOOL shouldLaunch() {
 
 	loadPrefs();
 
-	if (global_enabled_everywhere || shouldLaunch()) {
+	if (pref_getBool([@"EnabledApps-" stringByAppendingString:[NSBundle mainBundle].bundleIdentifier])) {
 
 		NSLog(@"[SmoothTable] -> Enabling");
 
-		if (global_enabled_inset) {
+		if (pref_getBool(@"pref_enable_inset")) {
 			%init(GROUP_TABLE_INSET);
 		}
-		if (global_enabled_round) {
+		if (pref_getBool(@"pref_enable_rounding")) {
 			%init(GROUP_CELL_ROUNDING);
 		}
 	}
