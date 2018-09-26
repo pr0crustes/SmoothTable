@@ -78,7 +78,7 @@ static void loadPrefs() {
 
 	loadPrefs();
 
-	if (pref_getBool([@"EnabledApps-" stringByAppendingString:[NSBundle mainBundle].bundleIdentifier])) {
+	if (pref_getBool(@"pref_enable_everywhere") || pref_getBool([@"EnabledApps-" stringByAppendingString:[NSBundle mainBundle].bundleIdentifier])) {
 
 		NSLog(@"[SmoothTable] -> Enabling");
 

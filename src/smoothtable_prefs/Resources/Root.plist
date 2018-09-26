@@ -48,6 +48,23 @@
 		</dict>
 
 		<dict>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+
+			<key>default</key>
+			<false/>
+
+			<key>defaults</key>
+			<string>me.pr0crustes.smoothtable_prefs</string>
+
+			<key>label</key>
+			<string>Enable Everywhere</string>
+
+			<key>key</key>
+			<string>pref_enable_everywhere</string>
+		</dict>
+
+		<dict>
 			<key>bundle</key>
 			<string>AppList</string>
 
@@ -64,7 +81,7 @@
 			<true/>
 
 			<key>label</key>
-			<string>Applications</string>
+			<string>Enabled Applications</string>
 
 			<key>ALSettingsPath</key>
 			<string>/var/mobile/Library/Preferences/me.pr0crustes.smoothtable_prefs.plist</string>
