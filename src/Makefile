@@ -7,7 +7,7 @@ THEOS_DEVICE_IP = 192.168.1.6
 include $(THEOS)/makefiles/common.mk
 
 TWEAK_NAME = SmoothTable
-SmoothTable_FILES = Tweak.xm
+SmoothTable_FILES = $(wildcard tweak/*.mm tweak/*.xm)
 SmoothTable_LIBRARIES = applist
 
 include $(THEOS_MAKE_PATH)/tweak.mk
