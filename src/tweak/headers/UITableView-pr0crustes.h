@@ -8,4 +8,5 @@
 	// New methods
 	-(void)pr0crustes_roundCell;
 	-(void)pr0crustes_roundCorners:(UIRectCorner) corners;
+	@property (nonatomic, assign) int pr0crustes_previousLocation;  // inited with 0
 @end

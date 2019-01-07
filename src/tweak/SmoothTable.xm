@@ -14,6 +14,8 @@ CGFloat global_radius = 25.0;
 
 	%hook UITableViewCell
 
+		%property (nonatomic, assign) int pr0crustes_previousLocation;
+
 		-(void)layoutSubviews {
 			%orig;
 			[self pr0crustes_roundCell];
@@ -21,17 +23,21 @@ CGFloat global_radius = 25.0;
 
 		%new
 		-(void)pr0crustes_roundCell {
-			[self pr0crustes_roundCorners:nil]; // Reset just to be sure
-			switch ([self sectionLocation]) {
-				case 4:  // Isolated
-					[self pr0crustes_roundCorners:UIRectCornerAllCorners];
-					break;
-				case 3:  // Bottom
-					[self pr0crustes_roundCorners:UIRectCornerBottomLeft|UIRectCornerBottomRight];
-					break;
-				case 2:  // Top
-					[self pr0crustes_roundCorners:UIRectCornerTopLeft|UIRectCornerTopRight];
-					break;
+			int location = [self sectionLocation];
+			if (location != self.pr0crustes_previousLocation) {  // previous location makes sure to only uptade when location changed.
+				self.pr0crustes_previousLocation = location;
+				[self pr0crustes_roundCorners:nil]; // Reset just to be sure
+				switch (location) {
+					case 4:  // Isolated
+						[self pr0crustes_roundCorners:UIRectCornerAllCorners];
+						break;
+					case 3:  // Bottom
+						[self pr0crustes_roundCorners:UIRectCornerBottomLeft|UIRectCornerBottomRight];
+						break;
+					case 2:  // Top
+						[self pr0crustes_roundCorners:UIRectCornerTopLeft|UIRectCornerTopRight];
+						break;
+				}
 			}
 		}
 
