@@ -76,18 +76,24 @@ static void loadPrefs() {
 
 %ctor {
 
-	loadPrefs();
+	NSBundle* mainBundle = [NSBundle mainBundle];
 
-	if (pref_getBool(@"pref_enable_everywhere") || pref_getBool([@"EnabledApps-" stringByAppendingString:[NSBundle mainBundle].bundleIdentifier])) {
+	if (mainBundle) {
+		NSString* bundleIdentifier = mainBundle.bundleIdentifier;
 
-		NSLog(@"[SmoothTable] -> Enabling");
+		if (bundleIdentifier) {
+			if (pref_getBool(@"pref_enable_everywhere") || pref_getBool([@"EnabledApps-" stringByAppendingString:bundleIdentifier])) {
+				NSLog(@"[SmoothTable] -> Enabling");
 
-		if (pref_getBool(@"pref_enable_inset")) {
-			%init(GROUP_TABLE_INSET);
-		}
-		if (pref_getBool(@"pref_enable_rounding")) {
-			%init(GROUP_CELL_ROUNDING);
+				loadPrefs();
+
+				if (pref_getBool(@"pref_enable_inset")) {
+					%init(GROUP_TABLE_INSET);
+				}
+				if (pref_getBool(@"pref_enable_rounding")) {
+					%init(GROUP_CELL_ROUNDING);
+				}
+			}
 		}
 	}
-	
 }

@@ -2,7 +2,7 @@ TARGET = iphone:11.2:10.0
 FINAL_PACKAGE = 1
 DEBUG = 0
 
-THEOS_DEVICE_IP = 192.168.1.6
+THEOS_DEVICE_IP = 192.168.1.64
 
 include $(THEOS)/makefiles/common.mk
 
