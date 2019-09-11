@@ -1,5 +1,7 @@
 include $(THEOS)/makefiles/common.mk
 
+ARCHS = arm64 arm64e
+
 BUNDLE_NAME = smoothtable_prefs
 smoothtable_prefs_FILES = pr0crustes_smta_RootListController.m
 smoothtable_prefs_INSTALL_PATH = /Library/PreferenceBundles
